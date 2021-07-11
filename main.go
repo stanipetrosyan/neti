@@ -1,15 +1,19 @@
 package main
 
 import (
-	"net/http"
-	"text/template"
+	"neti/handlers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	var router = gin.Default()
 
-	loginTmp := template.Must(template.ParseFiles("login.html"))
-	http.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
-		loginTmp.Execute(w, nil)
-	})
-	http.ListenAndServe(":8080", nil)
+	router.LoadHTMLGlob("templates/*")
+
+	router.GET("/auth", handlers.AuthApi)
+	router.POST("/login", handlers.LoginApi)
+	router.POST("/users", handlers.PostCreateUser)
+
+	router.Run()
 }
