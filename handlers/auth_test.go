@@ -22,6 +22,7 @@ func TestAuthApi(t *testing.T) {
 }
 
 func tupRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	// da capire bene la questione del path
 	html := template.Must(template.ParseFiles("../templates/login.html"))

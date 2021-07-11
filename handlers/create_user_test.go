@@ -23,21 +23,20 @@ var router *gin.Engine
 
 func TestCreateUser(t *testing.T) {
 	t.Run("should create a new user", func(t *testing.T) {
+		users := usersMock{}
+		users.On("Add", "admin", "admin").Return(true)
+
 		gin.SetMode(gin.TestMode)
 		router = gin.Default()
-		router.POST("/users", PostCreateUser)
+		router.POST("/users", PostCreateUser(users))
 
 		request, _ := http.NewRequest("POST", "/users", nil)
 		response := httptest.NewRecorder()
-
-		users := usersMock{}
-		users.On("Add", "admin", "admin").Return(true)
 
 		router.ServeHTTP(response, request)
 		users.MethodCalled("Add", "admin", "admin")
 
 		users.AssertNumberOfCalls(t, "Add", 1)
 		assert.Equal(t, http.StatusOK, response.Code)
-
 	})
 }

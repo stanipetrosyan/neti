@@ -1,12 +1,16 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"neti/pkg/db"
 
-func PostCreateUser(context *gin.Context) {
-	//u.Add("User", "user")
-	context.JSON(200, "nil")
-}
+	"github.com/gin-gonic/gin"
+)
 
-type Users interface {
-	Add(username string, password string) bool
+func PostCreateUser(users db.Users) gin.HandlerFunc {
+
+	return func(context *gin.Context) {
+		if users.Add("admin", "admin") {
+			context.JSON(200, "nil")
+		}
+	}
 }
