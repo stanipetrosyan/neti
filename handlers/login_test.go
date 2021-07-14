@@ -55,6 +55,6 @@ func TestLoginApi(t *testing.T) {
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	var router = gin.Default()
-	router.POST("/login", LoginApi)
+	router.POST("/login", LoginApi())
 	return router
 }

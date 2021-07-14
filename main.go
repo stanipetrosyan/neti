@@ -27,8 +27,8 @@ func main() {
 
 	router.LoadHTMLGlob("templates/*")
 
-	router.GET("/auth", handlers.AuthApi)
-	router.POST("/login", handlers.LoginApi)
+	router.GET("/auth", handlers.AuthApi())
+	router.POST("/login", handlers.LoginApi())
 	router.POST("/users", handlers.PostCreateUser(&users))
 
 	router.Run()

@@ -27,7 +27,7 @@ func tupRouter() *gin.Engine {
 	// da capire bene la questione del path
 	html := template.Must(template.ParseFiles("../templates/login.html"))
 	router.SetHTMLTemplate(html)
-	router.POST("/auth", AuthApi)
+	router.POST("/auth", AuthApi())
 
 	return router
 }
