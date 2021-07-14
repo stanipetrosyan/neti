@@ -19,6 +19,11 @@ func (m usersMock) Add(username string, password string) bool {
 	return args.Bool(0)
 }
 
+func (m usersMock) FindUserBy(username string) (string, string) {
+	args := m.Called(username)
+	return args.String(0), args.String(1)
+}
+
 var router *gin.Engine
 
 func TestCreateUser(t *testing.T) {
