@@ -8,15 +8,16 @@ import (
 	"neti/pkg/db"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 )
 
 // TODO use env file
 const (
-	host     = "localhost"
+	host     = "database"
 	port     = 5432
-	user     = "postgres"
-	password = "postgres"
-	dbname   = "users"
+	user     = "user"
+	password = "password"
+	dbname   = "postgres"
 )
 
 func main() {
@@ -39,12 +40,12 @@ func DBconnection() *sql.DB {
 
 	psql, err := sql.Open("postgres", connection)
 	if err != nil {
-		log.Fatal("connection error to database")
+		log.Fatal(err)
 	}
 
 	err = psql.Ping()
 	if err != nil {
-		log.Fatal("Some went wrong with Ping")
+		log.Fatal("Something went wrong with Ping", err)
 	}
 
 	return psql
