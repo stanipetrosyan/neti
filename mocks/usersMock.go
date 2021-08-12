@@ -1,13 +1,17 @@
 package mocks
 
-import "github.com/stretchr/testify/mock"
+import (
+	"neti/pkg/db"
+
+	"github.com/stretchr/testify/mock"
+)
 
 type UsersMock struct {
 	mock.Mock
 }
 
-func (m UsersMock) Add(username string, password string) bool {
-	args := m.Called(username, password)
+func (m UsersMock) Add(user db.User) bool {
+	args := m.Called(user)
 	return args.Bool(0)
 }
 

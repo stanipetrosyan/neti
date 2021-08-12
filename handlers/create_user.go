@@ -9,7 +9,7 @@ import (
 func PostCreateUser(users db.Users) gin.HandlerFunc {
 
 	return func(context *gin.Context) {
-		if users.Add("admin", "admin") {
+		if users.Add(db.User{Username: "admin", Password: "admin"}) {
 			context.JSON(200, "nil")
 		}
 	}

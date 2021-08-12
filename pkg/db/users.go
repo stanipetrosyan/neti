@@ -2,9 +2,13 @@ package db
 
 import "database/sql"
 
-// Add User model struct
+type User struct {
+	Username string
+	Password string
+}
+
 type Users interface {
-	Add(username string, password string) bool
+	Add(user User) bool
 	FindBy(username string) (string, string)
 }
 
@@ -13,9 +17,9 @@ type PostgresUsers struct {
 }
 
 // Add tests
-func (u *PostgresUsers) Add(username string, password string) bool {
+func (u *PostgresUsers) Add(user User) bool {
 	insertStmt := `insert into users("username", "password") values($1, $2)`
-	_, err := u.Psql.Exec(insertStmt, username, password)
+	_, err := u.Psql.Exec(insertStmt, user.Username, user.Password)
 
 	return err == nil
 }

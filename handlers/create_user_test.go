@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"neti/mocks"
+	"neti/pkg/db"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,7 @@ var router *gin.Engine
 func TestCreateUser(t *testing.T) {
 	t.Run("should create a new user", func(t *testing.T) {
 		users := mocks.UsersMock{}
-		users.On("Add", "admin", "admin").Return(true)
+		users.On("Add", db.User{Username: "admin", Password: "admin"}).Return(true)
 
 		gin.SetMode(gin.TestMode)
 		router = gin.Default()
