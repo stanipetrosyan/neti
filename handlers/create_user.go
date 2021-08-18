@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"neti/pkg/db"
 
@@ -10,14 +11,17 @@ import (
 
 func PostCreateUser(users db.Users) gin.HandlerFunc {
 
-	// TODO use real value
 	return func(context *gin.Context) {
-		hash, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.MinCost)
+		body := json.NewDecoder(context.Request.Body)
+		var user db.User
+		body.Decode(&user)
+
+		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
 		if err != nil {
 			log.Fatal("Error to salt password")
 		}
 
-		if users.Add(db.User{Username: "admin", Password: string(hash)}) {
+		if users.Add(db.User{Username: user.Username, Password: string(hash)}) {
 			context.JSON(200, "nil")
 		}
 	}
