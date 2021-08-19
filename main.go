@@ -24,6 +24,7 @@ func main() {
 	psql := DBconnection()
 
 	users := db.PostgresUsers{Psql: psql}
+	clients := db.PostgresClients{Psql: psql}
 	var router = gin.Default()
 
 	router.LoadHTMLGlob("templates/*")
@@ -31,6 +32,7 @@ func main() {
 	router.GET("/auth", handlers.AuthApi())
 	router.POST("/login", handlers.LoginApi(&users))
 	router.POST("/users", handlers.PostCreateUser(&users))
+	router.POST("/clients", handlers.PostClientsApi(&clients))
 
 	router.Run()
 }
