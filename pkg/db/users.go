@@ -16,7 +16,6 @@ type PostgresUsers struct {
 	Psql *sql.DB
 }
 
-// Add tests
 func (u *PostgresUsers) Add(user User) bool {
 	insertStmt := `insert into users("username", "password") values($1, $2)`
 	_, err := u.Psql.Exec(insertStmt, user.Username, user.Password)
