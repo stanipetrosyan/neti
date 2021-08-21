@@ -11,5 +11,8 @@ type PostgresClients struct {
 }
 
 func (c *PostgresClients) Add(client string) bool {
-	return true
+	insertStmt := `insert into clients("id") values($1)`
+	_, err := c.Psql.Exec(insertStmt, client)
+
+	return err == nil
 }
