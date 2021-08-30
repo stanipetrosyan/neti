@@ -19,7 +19,7 @@ func (c *PostgresClients) Add(client string) bool {
 }
 
 func (c *PostgresClients) Find(id string) string {
-	row := c.Psql.QueryRow(`SELECT * FROM clients where id = $1"`, id)
+	row := c.Psql.QueryRow(`SELECT * FROM clients where id = $1`, id)
 	var client string
 	row.Scan(&client)
 

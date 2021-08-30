@@ -24,7 +24,7 @@ func (u *PostgresUsers) Add(user User) bool {
 }
 
 func (u *PostgresUsers) FindBy(username string) (string, string) {
-	row := u.Psql.QueryRow(`SELECT * FROM users where username = $1"`, username)
+	row := u.Psql.QueryRow(`SELECT * FROM users where username = $1`, username)
 	var foundUsername string
 	var foundPassword string
 	row.Scan(&foundUsername, &foundPassword)

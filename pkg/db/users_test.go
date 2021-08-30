@@ -31,12 +31,12 @@ func TestPostgresUsers(t *testing.T) {
 			log.Fatal(err)
 		}
 
+		// migration db
 		_, err = db.Exec("CREATE TABLE users(username text, password text)")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// this work
 		clients := PostgresUsers{db}
 		clients.Add(User{Username: "user", Password: "pass"})
 

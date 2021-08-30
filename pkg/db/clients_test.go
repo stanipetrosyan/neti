@@ -33,16 +33,15 @@ func TestPostgresClients(t *testing.T) {
 			log.Fatal(err)
 		}
 
+		// migration db
 		_, err = db.Exec("CREATE TABLE clients(id text)")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// this work
 		clients := PostgresClients{db}
 		clients.Add("aClient")
 
-		// this not :)
 		client := clients.Find("aClient")
 		assert.Equal(t, client, "aClient")
 	})
