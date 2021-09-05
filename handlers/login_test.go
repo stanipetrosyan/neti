@@ -16,9 +16,12 @@ import (
 
 func TestLoginApi(t *testing.T) {
 	t.Run("should return 200", func(t *testing.T) {
+		password := mocks.PasswordMock{}
+		password.On("Compare", "hashPassword", []byte("admin")).Return(true)
+
 		users := mocks.UsersMock{}
-		users.On("FindBy", "admin").Return("admin", "admin")
-		router := setupRouter(users)
+		users.On("FindBy", "admin").Return("admin", "hashPassword")
+		router := setupRouter(users, password)
 
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
@@ -42,15 +45,19 @@ func TestLoginApi(t *testing.T) {
 
 func TestUnauthorizedLogin(t *testing.T) {
 	t.Run("should return 403 if login credentials are wrong", func(t *testing.T) {
+		password := mocks.PasswordMock{}
+		password.On("Compare", "hashPassword", []byte("wrong")).Return(false)
+
 		users := mocks.UsersMock{}
-		users.On("FindBy", "admin").Return("admin", "wrong")
-		router := setupRouter(users)
+		users.On("FindBy", "admin").Return("admin", "hashPassword")
+
+		router := setupRouter(users, password)
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
 		fw, _ := writer.CreateFormField("username")
 		io.Copy(fw, strings.NewReader("admin"))
 		fw, _ = writer.CreateFormField("password")
-		io.Copy(fw, strings.NewReader("admin"))
+		io.Copy(fw, strings.NewReader("wrong"))
 
 		writer.Close()
 
@@ -64,9 +71,9 @@ func TestUnauthorizedLogin(t *testing.T) {
 	})
 }
 
-func setupRouter(users mocks.UsersMock) *gin.Engine {
+func setupRouter(users mocks.UsersMock, password mocks.PasswordMock) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	var router = gin.Default()
-	router.POST("/login", LoginApi(users))
+	router.POST("/login", LoginApi(users, password))
 	return router
 }
