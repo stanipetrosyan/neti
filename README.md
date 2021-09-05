@@ -1,5 +1,11 @@
 # Neti - Simple and Fast IAM
 
+## Start
+
+```
+make server
+```
+
 ## Docker 
 
 docker build -t application-tag .

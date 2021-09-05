@@ -7,21 +7,18 @@ import (
 	"neti/handlers"
 	"neti/pkg/crypto"
 	"neti/pkg/db"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-// TODO use env file
-const (
-	host     = "database"
-	port     = 5432
-	user     = "user"
-	password = "password"
-	dbname   = "postgres"
-)
-
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	psql := DBconnection()
 
 	users := db.PostgresUsers{Psql: psql}
@@ -40,7 +37,8 @@ func main() {
 }
 
 func DBconnection() *sql.DB {
-	connection := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	connection := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))
 
 	psql, err := sql.Open("postgres", connection)
 	if err != nil {
