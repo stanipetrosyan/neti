@@ -2,24 +2,20 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
+	"neti/pkg/crypto"
 	"neti/pkg/db"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
-func PostCreateUser(users db.Users) gin.HandlerFunc {
+func PostCreateUser(users db.Users, password crypto.Password) gin.HandlerFunc {
 
 	return func(context *gin.Context) {
 		body := json.NewDecoder(context.Request.Body)
 		var user db.User
 		body.Decode(&user)
 
-		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
-		if err != nil {
-			log.Fatal("Error to salt password")
-		}
+		hash := password.Salt(user.Password)
 
 		if users.Add(db.User{Username: user.Username, Password: string(hash)}) {
 			context.JSON(200, "nil")
