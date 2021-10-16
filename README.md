@@ -2,6 +2,16 @@
 
 ## Start
 
+Create a `.env` file with the following properties: 
+```
+DB_HOST=database
+DB_PORT=5432
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=postgres
+```
+
+So, type this command:
 ```
 make server
 ```

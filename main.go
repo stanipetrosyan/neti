@@ -10,6 +10,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -20,6 +23,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 	psql := DBconnection()
+	//applyMigration(psql)
 
 	users := db.PostgresUsers{Psql: psql}
 	clients := db.PostgresClients{Psql: psql}
@@ -50,6 +54,24 @@ func DBconnection() *sql.DB {
 		log.Fatal("Something went wrong with Ping", err)
 	}
 
+	// Attualmente il numero di versione lo prende
+
+	applyMigration(psql)
+
 	return psql
 
+}
+
+func applyMigration(db *sql.DB) {
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	m, err := migrate.NewWithDatabaseInstance("file://pkg/db/migrations/", "postgres", driver)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := m.Up(); err != nil {
+		log.Println("si spacca qui", err)
+	}
 }
