@@ -23,7 +23,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 	psql := DBconnection()
-	//applyMigration(psql)
 
 	users := db.PostgresUsers{Psql: psql}
 	clients := db.PostgresClients{Psql: psql}
@@ -53,8 +52,6 @@ func DBconnection() *sql.DB {
 	if err != nil {
 		log.Fatal("Something went wrong with Ping", err)
 	}
-
-	// Attualmente il numero di versione lo prende
 
 	applyMigration(psql)
 
