@@ -1,14 +1,12 @@
-package db
+package repositories
 
-import "database/sql"
-
-type User struct {
-	Username string
-	Password string
-}
+import (
+	"database/sql"
+	"neti/internals/domain"
+)
 
 type Users interface {
-	Add(user User) bool
+	Add(user domain.User) bool
 	FindBy(username string) (string, string)
 }
 
@@ -16,7 +14,7 @@ type PostgresUsers struct {
 	Psql *sql.DB
 }
 
-func (u *PostgresUsers) Add(user User) bool {
+func (u *PostgresUsers) Add(user domain.User) bool {
 	insertStmt := `insert into users("username", "password") values($1, $2)`
 	_, err := u.Psql.Exec(insertStmt, user.Username, user.Password)
 

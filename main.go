@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"neti/handlers"
+	"neti/internals/handlers"
+	"neti/internals/repositories"
 	"neti/pkg/crypto"
-	"neti/pkg/db"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -24,8 +24,8 @@ func main() {
 	}
 	psql := DBconnection()
 
-	users := db.PostgresUsers{Psql: psql}
-	clients := db.PostgresClients{Psql: psql}
+	users := repositories.PostgresUsers{Psql: psql}
+	clients := repositories.PostgresClients{Psql: psql}
 	password := crypto.CryptoPassword{}
 	var router = gin.Default()
 
@@ -35,6 +35,7 @@ func main() {
 	router.POST("/login", handlers.LoginApi(&users, &password))
 	router.POST("/users", handlers.PostCreateUser(&users, &password))
 	router.POST("/clients", handlers.PostClientsApi(&clients))
+	router.GET("/token", handlers.GetTokenApi())
 
 	router.Run()
 }

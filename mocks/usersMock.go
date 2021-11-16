@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"neti/pkg/db"
+	"neti/internals/domain"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -10,7 +10,7 @@ type UsersMock struct {
 	mock.Mock
 }
 
-func (m UsersMock) Add(user db.User) bool {
+func (m UsersMock) Add(user domain.User) bool {
 	args := m.Called(user)
 	return args.Bool(0)
 }
