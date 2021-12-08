@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"neti/internals/domain"
-	"neti/pkg/db"
 	"testing"
 
 	"github.com/ory/dockertest/v3"
@@ -24,24 +23,22 @@ func TestPostgresUsers(t *testing.T) {
 		defer pool.Purge(resource)
 
 		connection := fmt.Sprintf("host=localhost port=%s user=user password=password dbname=postgres sslmode=disable", resource.GetPort("5432/tcp"))
-		var db1 *sql.DB
+		var db *sql.DB
 
 		if err = pool.Retry(func() error {
-			db1, err = sql.Open("postgres", connection)
-			return db1.Ping()
+			db, err = sql.Open("postgres", connection)
+			return db.Ping()
 		}); err != nil {
 			log.Fatal(err)
 		}
 
 		// migration db
-		/* 	_, err = db.Exec("CREATE TABLE users(username text, password text)")
+		_, err = db.Exec("CREATE TABLE users(username text, password text)")
 		if err != nil {
 			log.Fatal(err)
-		} */
+		}
 
-		db.ApplyMigration(db1)
-
-		clients := PostgresUsers{db1}
+		clients := PostgresUsers{db}
 		clients.Add(domain.User{Username: "user", Password: "pass"})
 
 		username, password := clients.FindBy("user")
