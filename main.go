@@ -6,12 +6,11 @@ import (
 	"log"
 	"neti/internals/handlers"
 	"neti/internals/repositories"
-	"neti/pkg/crypto"
+	services "neti/internals/services/crypto"
+	"neti/pkg/db"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -26,7 +25,7 @@ func main() {
 
 	users := repositories.PostgresUsers{Psql: psql}
 	clients := repositories.PostgresClients{Psql: psql}
-	password := crypto.CryptoPassword{}
+	password := services.CryptoPassword{}
 	var router = gin.Default()
 
 	router.LoadHTMLGlob("templates/*")
@@ -54,22 +53,8 @@ func DBconnection() *sql.DB {
 		log.Fatal("Something went wrong with Ping", err)
 	}
 
-	applyMigration(psql)
+	db.ApplyMigration(psql)
 
 	return psql
 
-}
-
-func applyMigration(db *sql.DB) {
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	m, err := migrate.NewWithDatabaseInstance("file://pkg/db/migrations/", "postgres", driver)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if err := m.Up(); err != nil {
-		log.Println("si spacca qui", err)
-	}
 }

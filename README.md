@@ -26,12 +26,14 @@ docker run -d -e POSTGRES_PASSWORD=docker -e POSTGRES_USER=admin -p 5433:5432 po
 
 docker-compose build` or `docker-compose up --build`.
 
+### Clean all 
+
+
+
 ## Architecture
 
 Which Architecture use: 
 * Golang Standard (cmd, internal, pkg)
-* Clean Architecture 
-* Onion Architecture
 * Hexagonal Architecture
 
 
