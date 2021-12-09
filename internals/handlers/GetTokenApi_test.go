@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"neti/internals/domain"
+	"neti/mocks"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -12,8 +14,12 @@ import (
 )
 
 func TestGetTokenApi(t *testing.T) {
+
+	auth := mocks.AuthMock{}
+	auth.On("AccessToken").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+
 	router := gin.Default()
-	router.POST("/token", GetTokenApi())
+	router.POST("/token", GetTokenApi(auth))
 
 	body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})
 
@@ -23,6 +29,7 @@ func TestGetTokenApi(t *testing.T) {
 	router.ServeHTTP(response, request)
 
 	assert.Equal(t, http.StatusOK, response.Code)
-	res, _ := json.Marshal(TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+	auth.AssertExpectations(t)
+	res, _ := json.Marshal(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
 	assert.Contains(t, response.Body.String(), string(res))
 }

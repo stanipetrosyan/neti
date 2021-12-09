@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	services "neti/internals/services"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,14 +13,7 @@ type TokenRequest struct {
 	Password  string `json:"password"`
 }
 
-type TokenResponse struct {
-	AccessToken string `json:"access_token"`
-	State       string `json:"state"`
-	TokenType   string `json:"token_type"`
-	ExpiresIn   string `json:"expires_in"`
-}
-
-func GetTokenApi() gin.HandlerFunc {
+func GetTokenApi(auth services.Auth) gin.HandlerFunc {
 
 	return func(context *gin.Context) {
 
@@ -26,7 +21,7 @@ func GetTokenApi() gin.HandlerFunc {
 
 		context.BindJSON(&json)
 
-		response := TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"}
+		response := auth.AccessToken()
 		context.JSON(200, response)
 	}
 }
