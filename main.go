@@ -6,7 +6,7 @@ import (
 	"log"
 	"neti/internals/handlers"
 	"neti/internals/repositories"
-	services "neti/internals/services/crypto"
+	services "neti/internals/services"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -27,15 +27,16 @@ func main() {
 	users := repositories.PostgresUsers{Psql: psql}
 	clients := repositories.PostgresClients{Psql: psql}
 	password := services.CryptoPassword{}
+	auth := services.AuthService{}
 	var router = gin.Default()
 
 	router.LoadHTMLGlob("templates/*")
 
-	router.GET("/auth", handlers.AuthApi())
-	router.POST("/login", handlers.LoginApi(&users, &password))
-	router.POST("/users", handlers.PostCreateUser(&users, &password))
+	router.GET("/auth", handlers.GetAuthApi())
+	router.POST("/login", handlers.PostLoginApi(&users, &password))
+	router.POST("/users", handlers.PostUsersApi(&users, &password))
 	router.POST("/clients", handlers.PostClientsApi(&clients))
-	router.GET("/token", handlers.GetTokenApi())
+	router.GET("/token", handlers.GetTokenApi(&auth))
 
 	router.Run()
 }
@@ -65,11 +66,11 @@ func applyMigration(db *sql.DB) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m, err := migrate.NewWithDatabaseInstance("file://resources/migrations", "postgres", driver)
+	m, err := migrate.NewWithDatabaseInstance("file:///migrations", "postgres", driver)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if err := m.Up(); err != nil {
-		log.Fatal("error during database migration up ", err)
+		log.Fatal("error during up database migration ", err)
 	}
 }

@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"neti/internals/domain"
 	"neti/internals/repositories"
-	services "neti/internals/services/crypto"
+	services "neti/internals/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-func PostCreateUser(users repositories.Users, password services.Password) gin.HandlerFunc {
+func PostUsersApi(users repositories.Users, password services.Password) gin.HandlerFunc {
 
 	return func(context *gin.Context) {
 		body := json.NewDecoder(context.Request.Body)

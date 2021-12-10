@@ -74,6 +74,6 @@ func TestUnauthorizedLogin(t *testing.T) {
 func setupRouter(users mocks.UsersMock, password mocks.PasswordMock) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	var router = gin.Default()
-	router.POST("/login", LoginApi(users, password))
+	router.POST("/login", PostLoginApi(users, password))
 	return router
 }

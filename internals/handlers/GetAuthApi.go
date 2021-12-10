@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthApi() gin.HandlerFunc {
+func GetAuthApi() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.HTML(http.StatusOK, "login.html", nil)
 	}

@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"neti/internals/repositories"
-	services "neti/internals/services/crypto"
+	services "neti/internals/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-func LoginApi(users repositories.Users, password services.Password) gin.HandlerFunc {
+func PostLoginApi(users repositories.Users, password services.Password) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var form UserForm
 		context.ShouldBind(&form)
