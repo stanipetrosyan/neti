@@ -14,13 +14,9 @@ type TokenRequest struct {
 }
 
 func GetTokenApi(auth services.Auth) gin.HandlerFunc {
-
 	return func(context *gin.Context) {
-
 		var json TokenRequest
-
 		context.BindJSON(&json)
-
 		response := auth.AccessToken()
 		context.JSON(200, response)
 	}
