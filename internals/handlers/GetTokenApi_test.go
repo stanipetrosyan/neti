@@ -15,21 +15,32 @@ import (
 
 func TestGetTokenApi(t *testing.T) {
 
-	auth := mocks.AuthMock{}
-	auth.On("AccessToken").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+	t.Run("should check if user credential are right when grant type is password", func (t *testing.T) {
+		password := mocks.PasswordMock{}
+		password.On("Compare", "hashPassword", []byte("admin")).Return(true)
 
-	router := gin.Default()
-	router.POST("/token", GetTokenApi(auth))
+		users := mocks.UsersMock{}
+		users.On("FindBy", "admin").Return("admin", "hashPassword")
 
-	body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})
-
-	request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
-
-	response := httptest.NewRecorder()
-	router.ServeHTTP(response, request)
-
-	assert.Equal(t, http.StatusOK, response.Code)
-	auth.AssertExpectations(t)
-	res, _ := json.Marshal(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
-	assert.Contains(t, response.Body.String(), string(res))
+		auth := mocks.AuthMock{}
+		auth.On("AccessToken").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+	
+		router := gin.Default()
+		router.POST("/token", GetTokenApi(auth, users, password))
+	
+		body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})
+	
+		request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
+	
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
+	
+		assert.Equal(t, http.StatusOK, response.Code)
+		auth.AssertExpectations(t)
+		users.AssertExpectations(t)
+		password.AssertExpectations(t)
+		res, _ := json.Marshal(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+		assert.Contains(t, response.Body.String(), string(res))
+	})
+	
 }
