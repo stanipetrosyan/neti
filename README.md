@@ -37,4 +37,11 @@ Which Architecture use:
 * Hexagonal Architecture
 
 
+## Curl call
+
+
+curl -X POST localhost:8080/users -H "Content-Type: application/json" -d '{"username": "stani", "password": "mypass"}'  
+
+curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"password","client_id":"client_id","username":"stani","password":"mypass"}'
+
 

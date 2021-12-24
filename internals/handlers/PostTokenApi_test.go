@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetTokenApi(t *testing.T) {
+func TestPostTokenApi(t *testing.T) {
 
 	t.Run("should check if user credential are right when grant type is password", func (t *testing.T) {
 		password := mocks.PasswordMock{}
@@ -28,8 +28,7 @@ func TestGetTokenApi(t *testing.T) {
 		router := gin.Default()
 		router.POST("/token", GetTokenApi(auth, users, password))
 	
-		body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})
-	
+		body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})	
 		request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
 	
 		response := httptest.NewRecorder()

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"neti/internals/repositories"
 	services "neti/internals/services"
 
@@ -14,12 +15,13 @@ type TokenRequest struct {
 	Password  string `json:"password"`
 }
 
-func GetTokenApi(auth services.Auth, users repositories.Users, password services.Password) gin.HandlerFunc {
+func PostTokenApi(auth services.Auth, users repositories.Users, password services.Password) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var request TokenRequest
 		context.BindJSON(&request)
 		
 		_, userPassword := users.FindBy(request.Username)
+		log.Println(userPassword)
 		if password.Compare(userPassword, []byte(request.Password)) {
 			response := auth.AccessToken()
 			context.JSON(200, response)
