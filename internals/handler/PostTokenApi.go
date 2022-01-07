@@ -1,9 +1,9 @@
-package handlers
+package handler
 
 import (
 	"log"
-	"neti/internals/repositories"
-	services "neti/internals/services"
+	repository "neti/internals/repository"
+	services "neti/internals/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,11 +15,11 @@ type TokenRequest struct {
 	Password  string `json:"password"`
 }
 
-func PostTokenApi(auth services.Auth, users repositories.Users, password services.Password) gin.HandlerFunc {
+func PostTokenApi(auth services.Auth, users repository.Users, password services.Password) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		var request TokenRequest
 		context.BindJSON(&request)
-		
+
 		_, userPassword := users.FindBy(request.Username)
 		log.Println(userPassword)
 		if password.Compare(userPassword, []byte(request.Password)) {
@@ -28,6 +28,6 @@ func PostTokenApi(auth services.Auth, users repositories.Users, password service
 		} else {
 			context.JSON(403, nil)
 		}
-		
+
 	}
 }

@@ -1,20 +1,21 @@
-package repositories
+package repository
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
-	"neti/internals/domain"
 	"testing"
 
+	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPostgresUsers(t *testing.T) {
-	t.Run("should add a user", func(t *testing.T) {
+func TestPostgresClients(t *testing.T) {
 
+	t.Run("should add a new client", func(t *testing.T) {
 		pool, err := dockertest.NewPool("")
+
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -33,17 +34,15 @@ func TestPostgresUsers(t *testing.T) {
 		}
 
 		// migration db
-		_, err = db.Exec("CREATE TABLE users(username text, password text)")
+		_, err = db.Exec("CREATE TABLE clients(id text)")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		clients := PostgresUsers{db}
-		clients.Add(domain.User{Username: "user", Password: "pass"})
+		clients := PostgresClients{db}
+		clients.Add("aClient")
 
-		username, password := clients.FindBy("user")
-		assert.Equal(t, username, "user")
-		assert.Equal(t, password, "pass")
-
+		client := clients.Find("aClient")
+		assert.Equal(t, client, "aClient")
 	})
 }

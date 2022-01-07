@@ -1,15 +1,15 @@
-package handlers
+package handler
 
 import (
 	"encoding/json"
 	"neti/internals/domain"
-	"neti/internals/repositories"
-	services "neti/internals/services"
+	"neti/internals/repository"
+	service "neti/internals/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-func PostUsersApi(users repositories.Users, password services.Password) gin.HandlerFunc {
+func PostUsersApi(users repository.Users, password service.Password) gin.HandlerFunc {
 
 	return func(context *gin.Context) {
 		body := json.NewDecoder(context.Request.Body)

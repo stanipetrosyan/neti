@@ -1,12 +1,12 @@
-package handlers
+package handler
 
 import (
-	"neti/internals/repositories"
+	repository "neti/internals/repository"
 
 	"github.com/gin-gonic/gin"
 )
 
-func PostClientsApi(clients repositories.Clients) gin.HandlerFunc {
+func PostClientsApi(clients repository.Clients) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if clients.Add("aClient") {
 			context.JSON(200, nil)

@@ -1,11 +1,11 @@
-package handlers
+package handler
 
 import (
 	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"neti/internals/domain"
-	"neti/mocks"
+	"neti/mock"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -21,10 +21,10 @@ func TestCreateUser(t *testing.T) {
 			"password": "pass"
 		}`)
 
-		password := mocks.PasswordMock{}
+		password := mock.PasswordMock{}
 		password.On("Salt", "pass").Return("passwordSalt")
 
-		users := mocks.UsersMock{}
+		users := mock.UsersMock{}
 		users.On("Add", domain.User{Username: "user", Password: "passwordSalt"}).Return(true)
 
 		gin.SetMode(gin.TestMode)

@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"neti/internals/handlers"
-	"neti/internals/repositories"
-	services "neti/internals/services"
+	handlers "neti/internals/handler"
+	repositories "neti/internals/repository"
+	services "neti/internals/service"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +36,7 @@ func main() {
 	router.POST("/login", handlers.PostLoginApi(&users, &password))
 	router.POST("/users", handlers.PostUsersApi(&users, &password))
 	router.POST("/clients", handlers.PostClientsApi(&clients))
-	router.POST("/token", handlers.GetTokenApi(&auth, &users, &password))
+	router.POST("/token", handlers.PostTokenApi(&auth, &users, &password))
 
 	router.Run()
 }

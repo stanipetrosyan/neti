@@ -1,9 +1,9 @@
-package handlers
+package handler
 
 import (
 	"net/http"
 	"net/http/httptest"
-	"neti/mocks"
+	"neti/mock"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +13,7 @@ import (
 func TestPostClientsApi(t *testing.T) {
 	t.Run("should create a new client", func(t *testing.T) {
 
-		clients := mocks.ClientsMock{}
+		clients := mock.ClientsMock{}
 		clients.On("Add", "aClient").Return(true)
 
 		gin.SetMode(gin.TestMode)
