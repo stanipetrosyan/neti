@@ -11,22 +11,20 @@ import (
 )
 
 func TestAuthApi(t *testing.T) {
-	t.Run("should return 200", func(t *testing.T) {
-		request, _ := http.NewRequest("POST", "/auth", nil)
-		response := httptest.NewRecorder()
-		router := tupRouter()
-		router.ServeHTTP(response, request)
-		assert.Equal(t, http.StatusOK, response.Code)
-		assert.Contains(t, response.Body.String(), "<title>Login page</title>")
-	})
-}
 
-func tupRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	html := template.Must(template.ParseFiles("../../templates/login.html"))
 	router.SetHTMLTemplate(html)
 	router.POST("/auth", GetAuthApi())
 
-	return router
+	t.Run("should return 200", func(t *testing.T) {
+		request, _ := http.NewRequest("POST", "/auth", nil)
+		response := httptest.NewRecorder()
+
+		router.ServeHTTP(response, request)
+
+		assert.Equal(t, http.StatusOK, response.Code)
+		assert.Contains(t, response.Body.String(), "<title>Login page</title>")
+	})
 }
