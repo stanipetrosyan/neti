@@ -45,3 +45,5 @@ curl -X POST localhost:8080/users -H "Content-Type: application/json" -d '{"user
 curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"password","client_id":"client_id","username":"stani","password":"mypass"}'
 
 
+
+## DB Migrations - Work In Progress

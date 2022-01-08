@@ -3,10 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
-	handlers "neti/internals/handler"
-	repositories "neti/internals/repository"
-	services "neti/internals/service"
+	handler "neti/internals/handler"
+	repository "neti/internals/repository"
+	service "neti/internals/service"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -15,28 +14,35 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors:            true,
+		DisableLevelTruncation: true,
+		FullTimestamp:          true,
+	})
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 	psql := DBconnection()
 
-	users := repositories.PostgresUsers{Psql: psql}
-	clients := repositories.PostgresClients{Psql: psql}
-	password := services.CryptoPassword{}
-	auth := services.AuthService{}
+	users := repository.PostgresUsers{Psql: psql}
+	clients := repository.PostgresClients{Psql: psql}
+	password := service.CryptoPassword{}
+	auth := service.AuthService{}
 	var router = gin.Default()
 
 	router.LoadHTMLGlob("templates/*")
 
-	router.GET("/auth", handlers.GetAuthApi())
-	router.POST("/login", handlers.PostLoginApi(&users, &password))
-	router.POST("/users", handlers.PostUsersApi(&users, &password))
-	router.POST("/clients", handlers.PostClientsApi(&clients))
-	router.POST("/token", handlers.PostTokenApi(&auth, &users, &password))
+	router.GET("/auth", handler.GetAuthApi())
+	router.POST("/login", handler.PostLoginApi(&users, &password))
+	router.POST("/users", handler.PostUsersApi(&users, &password))
+	router.POST("/clients", handler.PostClientsApi(&clients))
+	router.POST("/token", handler.PostTokenApi(&auth, &users, &password))
 
 	router.Run()
 }
@@ -52,10 +58,10 @@ func DBconnection() *sql.DB {
 
 	err = psql.Ping()
 	if err != nil {
-		log.Fatal("Something went wrong with Ping", err)
+		log.Error("Something went wrong with Ping", err)
 	}
 
-	applyMigration(psql)
+	//applyMigration(psql)
 
 	return psql
 
@@ -66,11 +72,11 @@ func applyMigration(db *sql.DB) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m, err := migrate.NewWithDatabaseInstance("file:///migrations", "postgres", driver)
+	m, err := migrate.NewWithDatabaseInstance("file://migrations", "postgres", driver)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
-	if err := m.Up(); err != nil {
-		log.Fatal("error during up database migration ", err)
+	if err := m.Run(); err != nil {
+		log.Error("Migration run failed: ", err)
 	}
 }
