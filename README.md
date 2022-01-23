@@ -16,34 +16,22 @@ So, type this command:
 make server
 ```
 
-## Docker 
+Now we can try a simple curl calls:
 
-docker build -t application-tag .
+* Create new user
+```
+curl -X POST localhost:8080/users -H "Content-Type: application/json" -d '{"username": "myuser", "password": "mypass"}'  
+```
 
-docker run -it --rm -p 5051:5050 application-tag
+* Get Token using Resource Owner Password Credential Grant Type Flow
+```
+curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"password","client_id":"client_id","username":"myuser","password":"mypass"}'
 
-docker run -d -e POSTGRES_PASSWORD=docker -e POSTGRES_USER=admin -p 5433:5432 postgres
-
-docker-compose build` or `docker-compose up --build`.
-
-### Clean all 
-
-
-
-## Architecture
-
-Which Architecture use: 
-* Golang Standard (cmd, internal, pkg)
-* Hexagonal Architecture
-
-
-## Curl call
-
-
-curl -X POST localhost:8080/users -H "Content-Type: application/json" -d '{"username": "stani", "password": "mypass"}'  
-
-curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"password","client_id":"client_id","username":"stani","password":"mypass"}'
-
+```
 
 
 ## DB Migrations - Work In Progress
+
+Actually doesn't work properly.
+
+So for first testing is necessary create the Users table. You can find sql in `migrations` directory.
