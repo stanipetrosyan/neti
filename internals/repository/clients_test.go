@@ -42,7 +42,7 @@ func TestPostgresClients(t *testing.T) {
 		clients := PostgresClients{db}
 		clients.Add("aClient")
 
-		client := clients.Find("aClient")
+		client := clients.FindBy("aClient")
 		assert.Equal(t, client, "aClient")
 	})
 }

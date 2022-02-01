@@ -1,6 +1,10 @@
 package mock
 
-import "github.com/stretchr/testify/mock"
+import (
+	"neti/internals/domain"
+
+	"github.com/stretchr/testify/mock"
+)
 
 type ClientsMock struct {
 	mock.Mock
@@ -11,7 +15,7 @@ func (m ClientsMock) Add(client string) bool {
 	return args.Bool(0)
 }
 
-func (m ClientsMock) Find(id string) string {
+func (m ClientsMock) FindBy(id string) domain.Client {
 	args := m.Called(id)
-	return args.String(0)
+	return args.Get(0).(domain.Client)
 }

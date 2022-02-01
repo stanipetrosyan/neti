@@ -14,19 +14,20 @@ import (
 )
 
 func TestPostTokenApi(t *testing.T) {
+	var password = mock.PasswordMock{}
+	var users = mock.UsersMock{}
+	var auth = mock.AuthMock{}
+	var clients = mock.ClientsMock{}
+	clients.On("FindBy", "aClientId").Return(domain.Client{ClientId: "aClientId", ClientSecret: "aClientSecret"})
+
+	var router = gin.Default()
 
 	t.Run("should check if user credential are right when grant type is password", func(t *testing.T) {
-		password := mock.PasswordMock{}
 		password.On("Compare", "hashPassword", []byte("admin")).Return(true)
-
-		users := mock.UsersMock{}
 		users.On("FindBy", "admin").Return("admin", "hashPassword")
-
-		auth := mock.AuthMock{}
 		auth.On("AccessToken").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
 
-		router := gin.Default()
-		router.POST("/token", PostTokenApi(auth, users, password))
+		router.POST("/token", PostTokenApi(auth, users, password, clients))
 
 		body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})
 		request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
@@ -38,8 +39,28 @@ func TestPostTokenApi(t *testing.T) {
 		auth.AssertExpectations(t)
 		users.AssertExpectations(t)
 		password.AssertExpectations(t)
+
 		res, _ := json.Marshal(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
 		assert.Contains(t, response.Body.String(), string(res))
+	})
+
+	t.Run("should check if client credentials are right when grant type is credentials", func(t *testing.T) {
+		auth.On("AccessToken").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+
+		//router.POST("/token", PostTokenApi(auth, users, password, clients))
+
+		body, _ := json.Marshal(TokenRequest{GrantType: "credentials", ClientId: "aClientId", ClientSecret: "aClientSecret"})
+		request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
+
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
+
+		assert.Equal(t, http.StatusOK, response.Code)
+		clients.AssertExpectations(t)
+
+		res, _ := json.Marshal(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
+		assert.Contains(t, response.Body.String(), string(res))
+
 	})
 
 }

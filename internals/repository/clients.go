@@ -1,10 +1,13 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+	"neti/internals/domain"
+)
 
 type Clients interface {
 	Add(client string) bool
-	Find(id string) string
+	FindBy(id string) domain.Client
 }
 
 type PostgresClients struct {
@@ -18,9 +21,9 @@ func (c *PostgresClients) Add(client string) bool {
 	return err == nil
 }
 
-func (c *PostgresClients) Find(id string) string {
+func (c *PostgresClients) FindBy(id string) domain.Client {
 	row := c.Psql.QueryRow(`SELECT * FROM clients where id = $1`, id)
-	var client string
+	var client domain.Client
 	row.Scan(&client)
 
 	return client
