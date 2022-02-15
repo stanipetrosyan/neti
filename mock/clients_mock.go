@@ -10,7 +10,7 @@ type ClientsMock struct {
 	mock.Mock
 }
 
-func (m ClientsMock) Add(client string) bool {
+func (m ClientsMock) Add(client domain.Client) bool {
 	args := m.Called(client)
 	return args.Bool(0)
 }

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"neti/internals/domain"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -40,9 +41,9 @@ func TestPostgresClients(t *testing.T) {
 		}
 
 		clients := PostgresClients{db}
-		clients.Add("aClient")
+		clients.Add(domain.Client{ClientId: "aClient", ClientSecret: ""})
 
 		client := clients.FindBy("aClient")
-		assert.Equal(t, client, "aClient")
+		assert.Equal(t, "aClient", client.ClientId)
 	})
 }

@@ -1,6 +1,6 @@
 package domain
 
 type Client struct {
-	ClientId     string
-	ClientSecret string
+	ClientId     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
 }
