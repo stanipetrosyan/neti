@@ -15,12 +15,15 @@ import (
 func TestPostClientsApi(t *testing.T) {
 	t.Run("should create a new client", func(t *testing.T) {
 
+		secret := mock.SecretMock{}
+		secret.On("ClientSecret").Return("aClientSecret")
+
 		clients := mock.ClientsMock{}
 		clients.On("Add", domain.Client{ClientId: "aClientId", ClientSecret: "aClientSecret"}).Return(true)
 
 		gin.SetMode(gin.TestMode)
 		var router = gin.Default()
-		router.POST("/clients", PostClientsApi(clients))
+		router.POST("/clients", PostClientsApi(clients, secret))
 
 		body := []byte(`{"client_id": "aClientId", "client_secret": "aClientSecret"}`)
 

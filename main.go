@@ -34,6 +34,7 @@ func main() {
 	clients := repository.PostgresClients{Psql: psql}
 	password := service.CryptoPassword{}
 	auth := service.AuthService{}
+	secret := service.CryptoSecret{}
 	var router = gin.Default()
 
 	router.LoadHTMLGlob("templates/*")
@@ -41,7 +42,7 @@ func main() {
 	router.GET("/auth", handler.GetAuthApi())
 	router.POST("/login", handler.PostLoginApi(&users, &password))
 	router.POST("/users", handler.PostUsersApi(&users, &password))
-	router.POST("/clients", handler.PostClientsApi(&clients))
+	router.POST("/clients", handler.PostClientsApi(&clients, &secret))
 	router.POST("/token", handler.PostTokenApi(&auth, &users, &password, &clients))
 
 	router.Run()
