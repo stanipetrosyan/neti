@@ -62,7 +62,7 @@ func DBconnection() *sql.DB {
 		log.Error("Something went wrong with Ping", err)
 	}
 
-	//applyMigration(psql)
+	applyMigration(psql)
 
 	return psql
 
@@ -75,9 +75,9 @@ func applyMigration(db *sql.DB) {
 	}
 	m, err := migrate.NewWithDatabaseInstance("file://migrations", "postgres", driver)
 	if err != nil {
-		log.Error(err)
+		log.Fatal(err)
 	}
-	if err := m.Run(); err != nil {
+	if err := m.Up(); err != migrate.ErrNoChange {
 		log.Error("Migration run failed: ", err)
 	}
 }

@@ -15,16 +15,21 @@ type PostgresClients struct {
 }
 
 func (c *PostgresClients) Add(client domain.Client) bool {
-	insertStmt := `insert into clients("id") values($1)`
-	_, err := c.Psql.Exec(insertStmt, client.ClientId)
+	insertStmt := `insert into clients values($1, $2)`
+	_, err := c.Psql.Exec(insertStmt, client.ClientId, client.ClientSecret)
 
 	return err == nil
 }
 
 func (c *PostgresClients) FindBy(id string) domain.Client {
-	row := c.Psql.QueryRow(`SELECT * FROM clients where id = $1`, id)
+	row := c.Psql.QueryRow(`SELECT * FROM clients where clientId = $1`, id)
 	var clientId string
-	row.Scan(&clientId)
+	var clientSecret string
+	err := row.Scan(&clientId, &clientSecret)
 
-	return domain.Client{ClientId: clientId}
+	if err != nil {
+		return domain.Client{}
+	}
+
+	return domain.Client{ClientId: clientId, ClientSecret: clientSecret}
 }

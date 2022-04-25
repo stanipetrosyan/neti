@@ -35,15 +35,18 @@ func TestPostgresClients(t *testing.T) {
 		}
 
 		// migration db
-		_, err = db.Exec("CREATE TABLE clients(id text)")
+		_, err = db.Exec("CREATE TABLE clients(clientId text, clientSecret text)")
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		clients := PostgresClients{db}
-		clients.Add(domain.Client{ClientId: "aClient", ClientSecret: ""})
+		add := clients.Add(domain.Client{ClientId: "aClient", ClientSecret: "aClientSecret"})
+
+		assert.True(t, add)
 
 		client := clients.FindBy("aClient")
 		assert.Equal(t, "aClient", client.ClientId)
+		assert.Equal(t, "aClientSecret", client.ClientSecret)
 	})
 }

@@ -26,7 +26,7 @@ curl -X POST localhost:8080/users -H "Content-Type: application/json" -d '{"user
 * Create new client
 
 ```
-curl -X POST localhost:8080/clients -H "Content-Type: application/json" -d '{"id": "clientId"}'  
+curl -X POST localhost:8080/clients -H "Content-Type: application/json" -d '{"client_id": "clientId"}'  
 
 ```
 
@@ -42,7 +42,6 @@ curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"gran
 ```
 
 > Because is not secure, Implicit Code Grant Type Flow will not implemented (insert here why)
-
 
 
 
