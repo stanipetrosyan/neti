@@ -5,7 +5,7 @@ import (
 	"neti/internals/domain"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 )
 
 type Auth interface {
