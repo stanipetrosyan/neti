@@ -5,6 +5,7 @@ import (
 	services "neti/internals/service"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 type TokenRequest struct {
@@ -23,6 +24,8 @@ func PostTokenApi(auth services.Auth, users repository.Users, password services.
 
 		if request.GrantType == "credentials" {
 			client := clients.FindBy(request.ClientId)
+			log.Info("client found with id: ", client.ClientId)
+
 			if client.ClientSecret == request.ClientSecret {
 				response := auth.AccessToken()
 				context.JSON(200, response)

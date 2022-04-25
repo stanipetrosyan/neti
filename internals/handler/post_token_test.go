@@ -60,7 +60,6 @@ func TestPostTokenApi(t *testing.T) {
 
 		res, _ := json.Marshal(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
 		assert.Contains(t, response.Body.String(), string(res))
-
 	})
 
 }
