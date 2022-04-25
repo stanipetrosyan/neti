@@ -16,7 +16,7 @@ func PostClientsApi(clients repository.Clients, secret service.Secret) gin.Handl
 		client.ClientSecret = secret.ClientSecret()
 
 		if clients.Add(client) {
-			context.JSON(200, nil)
+			context.JSON(200, client)
 		}
 	}
 }

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"neti/internals/domain"
@@ -34,5 +35,9 @@ func TestPostClientsApi(t *testing.T) {
 
 		clients.AssertExpectations(t)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		expectedBody, _ := json.Marshal(domain.Client{ClientId: "aClientId", ClientSecret: "aClientSecret"})
+
+		assert.Contains(t, res.Body.String(), string(expectedBody))
 	})
 }
