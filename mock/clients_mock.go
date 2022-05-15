@@ -19,3 +19,8 @@ func (m ClientsMock) FindBy(id string) domain.Client {
 	args := m.Called(id)
 	return args.Get(0).(domain.Client)
 }
+
+func (m ClientsMock) Exist(id string) bool {
+	args := m.Called(id)
+	return args.Bool(0)
+}

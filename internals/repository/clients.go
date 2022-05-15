@@ -8,6 +8,7 @@ import (
 type Clients interface {
 	Add(client domain.Client) bool
 	FindBy(id string) domain.Client
+	Exist(id string) bool
 }
 
 type PostgresClients struct {
@@ -32,4 +33,8 @@ func (c *PostgresClients) FindBy(id string) domain.Client {
 	}
 
 	return domain.Client{ClientId: clientId, ClientSecret: clientSecret}
+}
+
+func (c *PostgresClients) Exist(id string) bool {
+	return c.FindBy(id).ClientId == id
 }

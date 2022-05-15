@@ -44,6 +44,7 @@ func main() {
 	router.POST("/users", handler.PostUsersApi(&users, &password))
 	router.POST("/clients", handler.PostClientsApi(&clients, &secret))
 	router.POST("/token", handler.PostTokenApi(&auth, &users, &password, &clients))
+	router.GET("/authoriza", handler.GetAuthorizeApi(&clients))
 
 	router.Run()
 }
