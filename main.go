@@ -32,6 +32,7 @@ func main() {
 
 	users := repository.PostgresUsers{Psql: psql}
 	clients := repository.PostgresClients{Psql: psql}
+	codes := repository.PostgresCodes{}
 	password := service.CryptoPassword{}
 	auth := service.AuthService{}
 	secret := service.CryptoSecret{}
@@ -43,8 +44,8 @@ func main() {
 	router.POST("/login", handler.PostLoginApi(&users, &password))
 	router.POST("/users", handler.PostUsersApi(&users, &password))
 	router.POST("/clients", handler.PostClientsApi(&clients, &secret))
-	router.POST("/token", handler.PostTokenApi(&auth, &users, &password, &clients))
-	router.GET("/authoriza", handler.GetAuthorizeApi(&clients))
+	router.POST("/token", handler.PostTokenApi(&auth, &users, &password, &clients, &codes))
+	router.GET("/authoriza", handler.GetAuthorizeApi(&clients, &codes))
 
 	router.Run()
 }
