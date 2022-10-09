@@ -43,4 +43,4 @@ curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"gran
 curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"credentials","client_id":"client_id", "client_secret": "secret"}'
 ```
 
-> Because is not secure, Implicit Code Grant Type Flow will not implemented (insert here why)
+> Because is not secure, Implicit Code Grant Type Flow will be not implemented (insert here why)

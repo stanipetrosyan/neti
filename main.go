@@ -45,7 +45,7 @@ func main() {
 	router.POST("/users", handler.PostUsersApi(&users, &password))
 	router.POST("/clients", handler.PostClientsApi(&clients, &secret))
 	router.POST("/token", handler.PostTokenApi(&auth, &users, &password, &clients, &codes))
-	router.GET("/authoriza", handler.GetAuthorizeApi(&clients, &codes))
+	router.GET("/authorize", handler.GetAuthorizeApi(&clients, &codes))
 
 	router.Run()
 }
@@ -82,4 +82,6 @@ func applyMigration(db *sql.DB) {
 	if err := m.Up(); err != migrate.ErrNoChange {
 		log.Error("Migration run failed: ", err)
 	}
+
+	log.Info("Migration loaded")
 }
