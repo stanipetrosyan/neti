@@ -32,7 +32,7 @@ func main() {
 
 	users := repository.PostgresUsers{Psql: psql}
 	clients := repository.PostgresClients{Psql: psql}
-	codes := repository.PostgresCodes{}
+	codes := repository.PostgresCodes{Psql: psql}
 	password := service.CryptoPassword{}
 	auth := service.AuthService{}
 	secret := service.CryptoSecret{}

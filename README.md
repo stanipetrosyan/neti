@@ -43,4 +43,14 @@ curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"gran
 curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"credentials","client_id":"client_id", "client_secret": "secret"}'
 ```
 
+* Get Token using Authorization Code Grant Type Flow
+```
+curl -X localhost:8080/authorize -H "Content-Type: application/json" -d '{"response_type":"code","client_id":"client_id"}'
+```
+
+```
+curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"grant_type":"code","client_id":"client_id", "code":"aCode"}'
+```
+
+
 > Because is not secure, Implicit Code Grant Type Flow will be not implemented (insert here why)
