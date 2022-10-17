@@ -4,6 +4,7 @@ import (
 	"neti/internals/repository"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type AuthorizeRequest struct {
@@ -22,7 +23,9 @@ func GetAuthorizeApi(clients repository.Clients, codes repository.Codes) gin.Han
 		context.BindJSON(&request)
 
 		if clients.Exist(request.ClientId) {
-			codes.Add(repository.AuthorizationCode{ClientId: request.ClientId, Code: "aCode"})
+			code := uuid.New().String()
+
+			codes.Add(repository.AuthorizationCode{ClientId: request.ClientId, Code: code})
 			context.JSON(200, AuthorizeResponse{Code: "aCode"})
 		}
 	}
