@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-migrate/migrate/v4 v4.15.2
+	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.7
 	github.com/ory/dockertest/v3 v3.9.1
@@ -13,8 +14,6 @@ require (
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b
 )
-
-require github.com/google/uuid v1.3.0 // indirect
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect; indirecst
