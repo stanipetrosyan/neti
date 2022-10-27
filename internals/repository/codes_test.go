@@ -45,3 +45,39 @@ func TestPostgresCodes(t *testing.T) {
 		assert.Equal(t, "aCode", code)
 	})
 }
+
+func TestDeleteBy(t *testing.T) {
+	pool, err := dockertest.NewPool("")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resource, err := pool.Run("postgres", "13", []string{"POSTGRES_PASSWORD=password", "POSTGRES_USER=user"})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	connection := fmt.Sprintf("host=localhost port=%s user=user password=password dbname=postgres sslmode=disable", resource.GetPort("5432/tcp"))
+	var db *sql.DB
+
+	if err = pool.Retry(func() error {
+		db, err = sql.Open("postgres", connection)
+		return db.Ping()
+	}); err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec("CREATE TABLE codes(clientId TEXT NOT NULL, code TEXT NOT NULL)")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	codes := PostgresCodes{db}
+	add := codes.Add(AuthorizationCode{ClientId: "aClientId", Code: "aCode"})
+
+	assert.True(t, add)
+
+	delete := codes.DeleteBy("aClientId")
+	assert.True(t, delete)
+}
