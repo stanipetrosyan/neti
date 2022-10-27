@@ -26,7 +26,7 @@ func GetAuthorizeApi(clients repository.Clients, codes repository.Codes) gin.Han
 			code := uuid.New().String()
 
 			codes.Add(repository.AuthorizationCode{ClientId: request.ClientId, Code: code})
-			context.JSON(200, AuthorizeResponse{Code: "aCode"})
+			context.JSON(200, AuthorizeResponse{Code: code})
 		}
 	}
 }

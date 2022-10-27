@@ -24,7 +24,7 @@ func (c *PostgresCodes) Add(code AuthorizationCode) bool {
 }
 
 func (c *PostgresCodes) FindBy(clientId string) string {
-	row := c.Psql.QueryRow(`SELECT codes FROM codes where clientId = $1`, clientId)
+	row := c.Psql.QueryRow(`SELECT code FROM codes where clientId = $1`, clientId)
 	var foundCode string
 	row.Scan(&foundCode)
 

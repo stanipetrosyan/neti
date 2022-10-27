@@ -45,7 +45,7 @@ curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"gran
 
 * Get Token using Authorization Code Grant Type Flow
 ```
-curl -X localhost:8080/authorize -H "Content-Type: application/json" -d '{"response_type":"code","client_id":"client_id"}'
+curl -X  GET localhost:8080/authorize -H "Content-Type: application/json" -d '{"response_type":"code","client_id":"client_id"}'
 ```
 
 ```
