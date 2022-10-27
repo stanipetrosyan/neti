@@ -19,3 +19,8 @@ func (m CodesMock) FindBy(clientId string) string {
 	args := m.Called(clientId)
 	return args.String(0)
 }
+
+func (m CodesMock) DeleteBy(clientId string) bool {
+	args := m.Called(clientId)
+	return args.Bool(0)
+}

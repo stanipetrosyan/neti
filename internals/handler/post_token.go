@@ -45,6 +45,7 @@ func PostTokenApi(auth services.Auth, users repository.Users, password services.
 		case "code":
 			if codes.FindBy(request.ClientId) == request.Code {
 				response := auth.AccessToken()
+				codes.DeleteBy(request.ClientId)
 				context.JSON(200, response)
 			} else {
 				context.JSON(401, nil)

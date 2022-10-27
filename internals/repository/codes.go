@@ -10,6 +10,7 @@ type AuthorizationCode struct {
 type Codes interface {
 	Add(code AuthorizationCode) bool
 	FindBy(clientId string) string
+	DeleteBy(clientId string) bool
 }
 
 type PostgresCodes struct {
@@ -28,4 +29,8 @@ func (c *PostgresCodes) FindBy(clientId string) string {
 	row.Scan(&foundCode)
 
 	return foundCode
+}
+
+func (c *PostgresCodes) DeleteBy(clientId string) bool {
+	return true
 }
