@@ -8,6 +8,7 @@ import (
 type Users interface {
 	Add(user domain.User) bool
 	FindBy(username string) (string, string)
+	AddRole(username string, role string) bool
 }
 
 type PostgresUsers struct {
@@ -28,4 +29,8 @@ func (u *PostgresUsers) FindBy(username string) (string, string) {
 	row.Scan(&foundUsername, &foundPassword)
 
 	return foundUsername, foundPassword
+}
+
+func (u *PostgresUsers) AddRole(username string, role string) bool {
+	return false
 }

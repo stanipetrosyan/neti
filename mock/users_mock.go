@@ -19,3 +19,8 @@ func (m UsersMock) FindBy(username string) (string, string) {
 	args := m.Called(username)
 	return args.String(0), args.String(1)
 }
+
+func (m UsersMock) AddRole(username string, role string) bool {
+	args := m.Called(username, role)
+	return args.Bool(0)
+}
