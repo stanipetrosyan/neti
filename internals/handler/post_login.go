@@ -11,9 +11,9 @@ func PostLoginApi(users repository.Users, password services.Password) gin.Handle
 	return func(context *gin.Context) {
 		var form UserForm
 		context.ShouldBind(&form)
-		_, userPassword := users.FindBy(form.Username)
+		user := users.FindBy(form.Username)
 
-		if password.Compare(userPassword, []byte(form.Password)) {
+		if password.Compare(user.Password, []byte(form.Password)) {
 			context.JSON(200, nil)
 		} else {
 			context.JSON(403, nil)

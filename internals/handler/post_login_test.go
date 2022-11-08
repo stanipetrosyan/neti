@@ -6,6 +6,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"neti/internals/domain"
 	"neti/mock"
 	"strings"
 	"testing"
@@ -20,7 +21,7 @@ func TestLoginApi(t *testing.T) {
 		password.On("Compare", "hashPassword", []byte("admin")).Return(true)
 
 		users := mock.UsersMock{}
-		users.On("FindBy", "admin").Return("admin", "hashPassword")
+		users.On("FindBy", "admin").Return(domain.User{Username: "admin", Password: "hashPassword"})
 		router := setupRouter(users, password)
 
 		body := &bytes.Buffer{}
@@ -49,7 +50,7 @@ func TestUnauthorizedLogin(t *testing.T) {
 		password.On("Compare", "hashPassword", []byte("wrong")).Return(false)
 
 		users := mock.UsersMock{}
-		users.On("FindBy", "admin").Return("admin", "hashPassword")
+		users.On("FindBy", "admin").Return(domain.User{Username: "admin", Password: "hashPassword"})
 
 		router := setupRouter(users, password)
 		body := &bytes.Buffer{}

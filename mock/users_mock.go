@@ -15,9 +15,9 @@ func (m UsersMock) Add(user domain.User) bool {
 	return args.Bool(0)
 }
 
-func (m UsersMock) FindBy(username string) (string, string) {
+func (m UsersMock) FindBy(username string) domain.User {
 	args := m.Called(username)
-	return args.String(0), args.String(1)
+	return args.Get(0).(domain.User)
 }
 
 func (m UsersMock) AddRole(username string, role string) bool {

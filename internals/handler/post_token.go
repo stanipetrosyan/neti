@@ -35,8 +35,8 @@ func PostTokenApi(auth services.Auth, users repository.Users, password services.
 				context.JSON(401, nil)
 			}
 		case "password":
-			_, userPassword := users.FindBy(request.Username)
-			if password.Compare(userPassword, []byte(request.Password)) {
+			user := users.FindBy(request.Username)
+			if password.Compare(user.Password, []byte(request.Password)) {
 				response := auth.AccessToken()
 				context.JSON(200, response)
 			} else {

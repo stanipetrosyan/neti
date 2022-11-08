@@ -24,7 +24,7 @@ func TestPasswordGrantType(t *testing.T) {
 		t.Run("should check if user credential are right when grant type is password", func(t *testing.T) {
 			clients.On("FindBy", "aClientId").Return(domain.Client{ClientId: "aClientId", ClientSecret: "aClientSecret"})
 			password.On("Compare", "hashPassword", []byte("admin")).Return(true)
-			users.On("FindBy", "admin").Return("admin", "hashPassword")
+			users.On("FindBy", "admin").Return(domain.User{Username: "admin", Password: "hashPassword"})
 			auth.On("AccessToken").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
 
 			var router = gin.Default()

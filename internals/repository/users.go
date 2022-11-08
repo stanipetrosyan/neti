@@ -7,7 +7,7 @@ import (
 
 type Users interface {
 	Add(user domain.User) bool
-	FindBy(username string) (string, string)
+	FindBy(username string) domain.User
 	AddRole(username string, role string) bool
 }
 
@@ -16,21 +16,25 @@ type PostgresUsers struct {
 }
 
 func (u *PostgresUsers) Add(user domain.User) bool {
-	insertStmt := `insert into users("username", "password") values($1, $2)`
-	_, err := u.Psql.Exec(insertStmt, user.Username, user.Password)
+	insertStmt := `insert into users("username", "password", "role") values($1, $2, $3)`
+	_, err := u.Psql.Exec(insertStmt, user.Username, user.Password, user.Role)
 
 	return err == nil
 }
 
-func (u *PostgresUsers) FindBy(username string) (string, string) {
+func (u *PostgresUsers) FindBy(username string) domain.User {
 	row := u.Psql.QueryRow(`SELECT * FROM users where username = $1`, username)
-	var foundUsername string
-	var foundPassword string
-	row.Scan(&foundUsername, &foundPassword)
 
-	return foundUsername, foundPassword
+	var user domain.User
+	row.Scan(&user.Username, &user.Password, &user.Role)
+
+	return user
 }
 
 func (u *PostgresUsers) AddRole(username string, role string) bool {
-	return false
+	updateStmt := `update users set role = $1 where username = $2`
+	_, err := u.Psql.Exec(updateStmt, role, username)
+
+	return err == nil
+
 }
