@@ -15,7 +15,7 @@ type Auth interface {
 }
 
 type AuthService struct {
-	users repository.Users
+	Users repository.Users
 }
 
 func (s *AuthService) AccessToken() domain.TokenResponse {
@@ -39,12 +39,13 @@ func (s *AuthService) AccessToken() domain.TokenResponse {
 }
 
 func (s *AuthService) UserAccessToken(username string) domain.TokenResponse {
-	user := s.users.FindBy(username)
+	user := s.Users.FindBy(username)
 
 	expiresIn := time.Now().Add(time.Minute * 15).Unix()
 	claims := jwt.MapClaims{}
 	claims["sub"] = "aSubject"
 	claims["exp"] = expiresIn
+	claims["roles"] = []string{user.Role}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte("ACCESS_SECRET"))
 	if err != nil {

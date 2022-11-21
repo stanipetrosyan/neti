@@ -11,7 +11,7 @@ import (
 func TestAccessToken(t *testing.T) {
 	users := mock.UsersMock{}
 	users.On("FindBy", "aUser").Return(domain.User{Username: "aUser", Password: "aPass", Role: "aRole"})
-	auth := AuthService{users: users}
+	auth := AuthService{Users: users}
 
 	actual := auth.UserAccessToken("aUser")
 

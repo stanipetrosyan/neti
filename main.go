@@ -34,7 +34,7 @@ func main() {
 	clients := repository.PostgresClients{Psql: psql}
 	codes := repository.PostgresCodes{Psql: psql}
 	password := service.CryptoPassword{}
-	auth := service.AuthService{}
+	auth := service.AuthService{Users: &users}
 	secret := service.CryptoSecret{}
 	var router = gin.Default()
 
