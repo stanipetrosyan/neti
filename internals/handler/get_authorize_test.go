@@ -25,7 +25,7 @@ func TestAuthorizeApi(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/authorize", bytes.NewBuffer(body))
 	response := httptest.NewRecorder()
 	var router = gin.Default()
-	router.GET("/authorize", GetAuthorizeApi(clientMock, codesMock))
+	GetAuthorizeApi(router, clientMock, codesMock)
 	router.ServeHTTP(response, request)
 
 	assert.Equal(t, http.StatusOK, response.Code)

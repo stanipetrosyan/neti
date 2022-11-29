@@ -16,10 +16,10 @@ func TestAuthApi(t *testing.T) {
 	router := gin.Default()
 	html := template.Must(template.ParseFiles("../../templates/login.html"))
 	router.SetHTMLTemplate(html)
-	router.POST("/auth", GetAuthApi())
+	GetAuthApi(router)
 
 	t.Run("should return 200", func(t *testing.T) {
-		request, _ := http.NewRequest("POST", "/auth", nil)
+		request, _ := http.NewRequest("GET", "/auth", nil)
 		response := httptest.NewRecorder()
 
 		router.ServeHTTP(response, request)

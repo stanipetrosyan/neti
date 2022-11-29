@@ -9,9 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostUsersApi(users repository.Users, password service.Password) gin.HandlerFunc {
-
-	return func(context *gin.Context) {
+func PostUsersApi(router *gin.Engine, users repository.Users, password service.Password) {
+	router.POST("/users", func(context *gin.Context) {
 		body := json.NewDecoder(context.Request.Body)
 		var user domain.User
 		body.Decode(&user)
@@ -21,5 +20,5 @@ func PostUsersApi(users repository.Users, password service.Password) gin.Handler
 		if users.Add(domain.User{Username: user.Username, Password: string(hash)}) {
 			context.JSON(200, "nil")
 		}
-	}
+	})
 }

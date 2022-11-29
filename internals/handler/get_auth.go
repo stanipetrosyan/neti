@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetAuthApi() gin.HandlerFunc {
-	return func(context *gin.Context) {
+func GetAuthApi(router *gin.Engine) {
+	router.GET("/auth", func(context *gin.Context) {
 		context.HTML(http.StatusOK, "login.html", nil)
-	}
+	})
 }

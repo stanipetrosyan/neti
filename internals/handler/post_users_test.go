@@ -29,7 +29,7 @@ func TestCreateUser(t *testing.T) {
 
 		gin.SetMode(gin.TestMode)
 		router = gin.Default()
-		router.POST("/users", PostUsersApi(users, password))
+		PostUsersApi(router, users, password)
 
 		request, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(body))
 		request.Header.Set("content-type", "application/json")

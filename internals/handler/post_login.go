@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostLoginApi(users repository.Users, password services.Password) gin.HandlerFunc {
-	return func(context *gin.Context) {
+func PostLoginApi(router *gin.Engine, users repository.Users, password services.Password) {
+	router.POST("/login", func(context *gin.Context) {
 		var form UserForm
 		context.ShouldBind(&form)
 		user := users.FindBy(form.Username)
@@ -18,7 +18,7 @@ func PostLoginApi(users repository.Users, password services.Password) gin.Handle
 		} else {
 			context.JSON(403, nil)
 		}
-	}
+	})
 }
 
 type UserForm struct {

@@ -24,7 +24,7 @@ func TestPostClientsApi(t *testing.T) {
 
 		gin.SetMode(gin.TestMode)
 		var router = gin.Default()
-		router.POST("/clients", PostClientsApi(clients, secret))
+		PostClientsApi(router, clients, secret)
 
 		body := []byte(`{"client_id": "aClientId", "client_secret": "aClientSecret"}`)
 

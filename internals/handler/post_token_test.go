@@ -24,11 +24,11 @@ func TestPasswordGrantType(t *testing.T) {
 		t.Run("should check if user credential are right when grant type is password", func(t *testing.T) {
 			clients.On("FindBy", "aClientId").Return(domain.Client{ClientId: "aClientId", ClientSecret: "aClientSecret"})
 			password.On("Compare", "hashPassword", []byte("admin")).Return(true)
-			users.On("FindBy", "cadmin").Return(domain.User{Username: "admin", Password: "hashPassword"})
+			users.On("FindBy", "admin").Return(domain.User{Username: "admin", Password: "hashPassword"})
 			auth.On("UserAccessToken", "admin").Return(domain.TokenResponse{AccessToken: "anAccessToken", State: "aState", TokenType: "aTokenType", ExpiresIn: "expired"})
 
 			var router = gin.Default()
-			router.POST("/token", PostTokenApi(auth, users, password, clients, codes))
+			PostTokenApi(router, auth, users, password, clients, codes)
 
 			body, _ := json.Marshal(TokenRequest{GrantType: "password", ClientId: "client_id", Username: "admin", Password: "admin"})
 			request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
@@ -59,7 +59,7 @@ func TestCredentialsGranType(t *testing.T) {
 		clients.On("FindBy", "aClientId").Return(domain.Client{ClientId: "aClientId", ClientSecret: "aClientSecret"})
 
 		var router = gin.Default()
-		router.POST("/token", PostTokenApi(auth, users, password, clients, codes))
+		PostTokenApi(router, auth, users, password, clients, codes)
 
 		body, _ := json.Marshal(TokenRequest{GrantType: "credentials", ClientId: "aClientId", ClientSecret: "aClientSecret"})
 		request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))
@@ -89,7 +89,7 @@ func TestCodeGrantType(t *testing.T) {
 		codes.On("DeleteBy", "aClientId").Return(true)
 
 		var router = gin.Default()
-		router.POST("/token", PostTokenApi(auth, users, password, clients, codes))
+		PostTokenApi(router, auth, users, password, clients, codes)
 
 		body, _ := json.Marshal(TokenRequest{GrantType: "code", Code: "aCode", ClientId: "aClientId", ClientSecret: "aClientSecret"})
 		request, _ := http.NewRequest("POST", "/token", bytes.NewBuffer(body))

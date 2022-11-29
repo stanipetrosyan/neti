@@ -18,8 +18,8 @@ type TokenRequest struct {
 	Scope        string `json:"scope"`
 }
 
-func PostTokenApi(auth services.Auth, users repository.Users, password services.Password, clients repository.Clients, codes repository.Codes) gin.HandlerFunc {
-	return func(context *gin.Context) {
+func PostTokenApi(router *gin.Engine, auth services.Auth, users repository.Users, password services.Password, clients repository.Clients, codes repository.Codes) {
+	router.POST("/token", func(context *gin.Context) {
 		var request TokenRequest
 		context.BindJSON(&request)
 
@@ -51,5 +51,5 @@ func PostTokenApi(auth services.Auth, users repository.Users, password services.
 				context.JSON(401, nil)
 			}
 		}
-	}
+	})
 }

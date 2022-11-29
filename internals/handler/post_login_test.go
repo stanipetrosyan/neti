@@ -22,7 +22,9 @@ func TestLoginApi(t *testing.T) {
 
 		users := mock.UsersMock{}
 		users.On("FindBy", "admin").Return(domain.User{Username: "admin", Password: "hashPassword"})
-		router := setupRouter(users, password)
+
+		var router = gin.Default()
+		PostLoginApi(router, users, password)
 
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
@@ -52,7 +54,9 @@ func TestUnauthorizedLogin(t *testing.T) {
 		users := mock.UsersMock{}
 		users.On("FindBy", "admin").Return(domain.User{Username: "admin", Password: "hashPassword"})
 
-		router := setupRouter(users, password)
+		var router = gin.Default()
+		PostLoginApi(router, users, password)
+
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
 		fw, _ := writer.CreateFormField("username")
@@ -70,11 +74,4 @@ func TestUnauthorizedLogin(t *testing.T) {
 		users.AssertExpectations(t)
 		assert.Equal(t, http.StatusForbidden, response.Code)
 	})
-}
-
-func setupRouter(users mock.UsersMock, password mock.PasswordMock) *gin.Engine {
-	gin.SetMode(gin.TestMode)
-	var router = gin.Default()
-	router.POST("/login", PostLoginApi(users, password))
-	return router
 }

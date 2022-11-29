@@ -16,9 +16,8 @@ type AuthorizeResponse struct {
 	Code string `json:"code"`
 }
 
-func GetAuthorizeApi(clients repository.Clients, codes repository.Codes) gin.HandlerFunc {
-
-	return func(context *gin.Context) {
+func GetAuthorizeApi(router *gin.Engine, clients repository.Clients, codes repository.Codes) {
+	router.GET("/authorize", func(context *gin.Context) {
 		var request AuthorizeRequest
 		context.BindJSON(&request)
 
@@ -28,5 +27,5 @@ func GetAuthorizeApi(clients repository.Clients, codes repository.Codes) gin.Han
 			codes.Add(repository.AuthorizationCode{ClientId: request.ClientId, Code: code})
 			context.JSON(200, AuthorizeResponse{Code: code})
 		}
-	}
+	})
 }

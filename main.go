@@ -40,15 +40,13 @@ func main() {
 
 	router.LoadHTMLGlob("templates/*")
 
-	router.GET("/auth", handler.GetAuthApi())
-	router.POST("/login", handler.PostLoginApi(&users, &password))
-	router.POST("/users", handler.PostUsersApi(&users, &password))
-	router.POST("/clients", handler.PostClientsApi(&clients, &secret))
-	router.POST("/token", handler.PostTokenApi(&auth, &users, &password, &clients, &codes))
-	router.GET("/authorize", handler.GetAuthorizeApi(&clients, &codes))
-
-	//refactor
+	handler.GetAuthApi(router)
+	handler.PostClientsApi(router, &clients, &secret)
+	handler.PostUsersApi(router, &users, &password)
 	handler.PutUserRoleApi(&users, router)
+	handler.PostLoginApi(router, &users, &password)
+	handler.GetAuthorizeApi(router, &clients, &codes)
+	handler.PostTokenApi(router, &auth, &users, &password, &clients, &codes)
 
 	router.Run()
 }

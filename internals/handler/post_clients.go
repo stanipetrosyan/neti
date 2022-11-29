@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostClientsApi(clients repository.Clients, secret service.Secret) gin.HandlerFunc {
-	return func(context *gin.Context) {
+func PostClientsApi(router *gin.Engine, clients repository.Clients, secret service.Secret) {
+	router.POST("/clients", func(context *gin.Context) {
 		var client domain.Client
 		context.BindJSON(&client)
 
@@ -18,5 +18,5 @@ func PostClientsApi(clients repository.Clients, secret service.Secret) gin.Handl
 		if clients.Add(client) {
 			context.JSON(200, client)
 		}
-	}
+	})
 }
