@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"neti/internals/domain"
 	repository "neti/internals/repository"
 	services "neti/internals/service"
 
@@ -8,19 +9,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type TokenRequest struct {
-	GrantType    string `json:"grant_type"`
-	Code         string `json:"code"`
-	ClientId     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	Scope        string `json:"scope"`
-}
-
 func PostTokenApi(router *gin.Engine, auth services.Auth, users repository.Users, password services.Password, clients repository.Clients, codes repository.Codes) {
 	router.POST("/token", func(context *gin.Context) {
-		var request TokenRequest
+		var request domain.TokenRequest
 		context.BindJSON(&request)
 
 		switch request.GrantType {
