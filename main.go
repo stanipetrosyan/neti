@@ -40,7 +40,6 @@ func main() {
 
 	router.LoadHTMLGlob("templates/*")
 
-	handler.GetAuthApi(router)
 	handler.PostClientsApi(router, &clients, &secret)
 	handler.PostUsersApi(router, &users, &password)
 	handler.PutUserRoleApi(&users, router)
