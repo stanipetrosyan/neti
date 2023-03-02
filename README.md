@@ -16,7 +16,7 @@ So, type this command:
 make server
 ```
 
-> Probably first time will fail, i know it is a bug... anyway, launch it another one time :) 
+> Probably first time will fail, launch it again
 
 Now we can try a simple curl calls:
 
@@ -53,4 +53,4 @@ curl -X POST localhost:8080/token -H "Content-Type: application/json" -d '{"gran
 ```
 
 
-> Because is not secure, Implicit Code Grant Type Flow will be not implemented (insert here why)
+> Implicit Code Grant Type Flow will be not implemented [https://oauth.net/2/grant-types/implicit/]
